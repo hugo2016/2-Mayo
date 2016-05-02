@@ -1,0 +1,68 @@
+cremex <- read.csv ("C:\\Users\\SALA-C13\\Downloads\\PIB Mexico 1960-2015.csv")
+cremexts <- ts(cremex[,2])
+View(cremexts)
+cremexts <- ts(cremex [,2], start  = 1960, end = 2015)
+plot(cremex1950)
+
+##########Análisis de residuos###########
+#require(fpp)
+#plot(cremexts, main="cremextscupacion 2005 al 2015",
+#     ylab="cremextscupados", xlab="Trimenstre")
+#residuos <- residuals(snaive(cremexts))
+##Análisis de residuos
+#Buscar el método que la media de los residuos sea cercano a cero
+#No existe autocorrelacon significativa
+
+cremex <- read.csv ("C:\\Users\\SALA-C13\\Downloads\\PIB Mexico 1960-2015.csv")
+cremexts <- ts(cremex [,2], start  = 1960, end = 2015)
+require (fpp)
+plot(cremexts, main="Crecimiento económico en México de 1960 a 2015 ", 
+     ylab="Tasa", xlab="Año")
+cremex1960 <- window(cremexts, start=(1960), end=c(2015))
+res1 <- residuals(naive(cremex1960))
+res1
+res2 <- residuals(snaive(cremex1960))
+res3 <- residuals(rwf(cremex1960, 3, drift = T))
+
+plot(res2, main="Residuals de Ingenuo Estacional ", 
+     ylab="residuales", xlab="años") ###Para saber si la varianza es constante
+Acf(res2, main="ACF de residuales") ###Para ver si hay o no autocorrelacion emtre los residuos
+hist(res2, nclass="FD", main="histograma residuales")###Para conocr si los residuos se distribuyen normal
+
+plot(res3, main="Residuals de Deriva", 
+     ylab="residuales", xlab="años")
+Acf(res3, main="ACF de residuales")
+hist(res3, nclass="FD", main="histograma residuales")
+
+plot(res1, main="Residuals de Ingenuo ", 
+     ylab="residuales", xlab="años")
+Acf(res1, main="ACF de residuales")
+hist(res1, nclass="FD", main="histograma residuales")
+
+res4 <- residuals(meanf(cremex1960))
+plot(res4, main="Residuals de la Media ", 
+     ylab="residuales", xlab="años")
+Acf(res4, main="ACF de residuales")
+hist(res4, nclass="FD", main="histograma residuales")
+
+###Prueba Box Pierce###
+#Box.test(res,lag=10,fitdf=0, type="Lj")
+###Prueba Ljung - Box
+#Box.test(res,lag=10,fitdf=0, type="Lj") , para datos no estacioales usar h=10 sino h=2m m es el periodo
+#de estacionalidad, el fitdf es para la prueba de hipotesis donde la hipotesis nula si no la rechazamos
+#la aleatoriedad en los residuos si el p-value es mayor a 0.05 no se rechaza la hipotesis nula de aleatoriedad
+#e independencia
+
+###Box Pierce###
+Box.test(res1,lag=10,fitdf=0)
+Box.test(res2,lag=10,fitdf=0)
+Box.test(res3,lag=10,fitdf=0)
+Box.test(res4,lag=10,fitdf=0)
+
+###Box Ljun###
+Box.test(res1,lag=10,fitdf=0, type="Lj")
+Box.test(res2,lag=10,fitdf=0, type="Lj")
+Box.test(res3,lag=10,fitdf=0, type="Lj")
+Box.test(res4,lag=10,fitdf=0, type="Lj")
+
+
